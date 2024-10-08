@@ -23,7 +23,7 @@ function popExample(arr) {
 }
 popExample([1, 2, 3]);
 
-// shift()
+// shift() - Shift all elements by -1 index. Will remove the first element.
 function shiftExample(arr) {
   console.log("Original Array:", arr);
 
@@ -32,7 +32,7 @@ function shiftExample(arr) {
 }
 shiftExample([1, 2, 3]);
 
-// unshift()
+// unshift() - Insert element in the front and shift elements by 1 index
 function unshiftExample(arr, element) {
   console.log("Original Array:", arr);
 
@@ -75,8 +75,11 @@ mapExample([1, 2, 3]);
 function filterExample(arr) {
   console.log("Original Array:", arr);
 
-  let newArr = arr.filter(function(item) {
-    return item > 3;
+  // let newArr = arr.filter(function(item) {
+  //   return item > 3;
+  // });
+  let newArr = arr.filter((item) => {
+    item > 3;
   });
   console.log("After filter:", newArr);
 }

@@ -9,5 +9,12 @@ There is no automated test for this one, this is more for you to understand time
 */
 
 function calculateTime(n) {
+    console.time("Sum from 1 to n")
+    for (let index = 1; index <= n; index++) {}
+    console.timeEnd("Sum from 1 to n")
     return 0.01;
 }
+
+//calculateTime(100) //0.067ms
+//calculateTime(100000) //4.382ms
+//calculateTime(1000000000) //843.535ms
