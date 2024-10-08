@@ -46,3 +46,10 @@ async function asyncFunction(resolve) {
 }
 
 asyncFunction(onDone)
+
+//Situations where Async is used - 
+/*
+    1. Database calls
+    2. Reading file system
+    3. Network calls (API Calls)
+*/
