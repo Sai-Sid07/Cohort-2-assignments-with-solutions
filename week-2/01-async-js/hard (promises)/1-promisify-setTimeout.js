@@ -3,6 +3,7 @@
 */
 
 function wait(n) {
+    ret
 }
 
 module.exports = wait;

@@ -15,7 +15,8 @@ describe('API Endpoints', () => {
   });
 
   afterAll((done) => {
-    globalServer.close(done);
+    globalServer.close();
+    done()
   });
 
   describe('GET /files', () => {

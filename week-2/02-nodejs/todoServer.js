@@ -41,9 +41,74 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
+  const fs = require('fs')
   
   const app = express();
   
+  let todos = []
+  let lastId = 1;
+  
   app.use(bodyParser.json());
+
+  app.get("/todos", (req, res) => {
+    return res.status(200).json(todos)
+  })
+
+  app.get("/todos/:id", (req, res) => {
+    const index = req.params.id
+    itemFound = false
+    todos.forEach((todo, ind) => {
+      if(todo.id == index){
+        itemFound = true
+        return res.status(200).json(todo)
+      }
+    })
+    if(!itemFound){
+      return res.status(404).json("Not Found")
+    }
+  })
+
+  app.post("/todos", (req, res) => {
+    const todoItem = req.body
+    const todo = {
+      id: lastId,
+      title: todoItem.title,
+      completed: todoItem.completed,
+      description: todoItem.description,
+    }
+    todos.push(todo)
+    lastId += 1
+    return res.status(201).json({"id": todo.id})
+  })
+
+  app.put("/todos/:id", (req, res) => {
+    const index = req.params.id
+    const todoItem = req.body
+    const todoObj = {
+      id: index,
+      title: todoItem.title,
+      completed: todoItem.completed,
+      description: todoItem.description,
+    }
+    todos.forEach((todo, ind) => {
+      if(todo.id == index){
+        todos[ind] = todoObj
+        return res.status(200).json({msg: "Todo updated"})
+      }
+    })
+    return res.status(404).json("Item not found")
+  })
+
+  app.delete("/todos/:id", (req, res) => {
+    const indexOfTodo = req.params.id
+    const updatedTodos = todos.filter(element => {
+      return indexOfTodo !== element.id.toString()
+    })
+    if(updatedTodos.length == todos.length){
+      return res.status(404).json("Index not found")
+    }
+
+    return res.status(200).json("Deleted Successfully")
+  })
   
   module.exports = app;

@@ -8,3 +8,6 @@
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 **/.history
+
+### Node_Modules ###
+node_modules/
