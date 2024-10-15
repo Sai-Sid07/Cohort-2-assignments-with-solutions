@@ -16,6 +16,25 @@ setInterval(() => {
     numberOfRequestsForUser = {};
 }, 1000)
 
+const rateLimiter = (req, res, next) => {
+  const userId = req.headers['user-id']
+  if(numberOfRequestsForUser[userId] == null){
+    numberOfRequestsForUser[userId] = 1
+  }else{
+    numberOfRequestsForUser[userId] = numberOfRequestsForUser[userId] + 1
+  }
+
+  if(numberOfRequestsForUser[userId] >= 5){
+    return res.status(404).json({
+      message: "Too many requests. Try again in 1 second."
+    })
+  }
+
+  next()
+}
+
+app.use(rateLimiter)
+
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });
 });
