@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch People Data</title>
+</head>
+<body>
+    <div id="peopleData"></div>
+    <button onclick="fetchData()">Fetch Data!</button>
+</body>
+<script>
+    const fetchData = async () => {
+        const response = await fetch("https://fakerapi.it/api/v1/persons")
+        const data = await response.json()
+        console.log(data)
+        for(let person of data.data){
+            console.log(person)
+            peopleData.innerHTML += `
+            <div>
+                <h5>ID: ${person.id}</h5>
+                <p>First Name: ${person.firstname}</p>
+                <p>Last Name: ${person.lastname}</p>
+                <p>Birthday: ${person.birthday}</p>
+                <p>Email: ${person.email}</p>
+                </br>
+            </div>
+            `
+        }
+
+
+        
+    }
+</script>
+</html>
