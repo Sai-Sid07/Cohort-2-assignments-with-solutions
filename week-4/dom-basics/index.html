@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Calculate Sum</title>
+    </head>
+    <script>
+        let timeout;
+        const debouncedPopulateDiv = async () => {
+            clearTimeout(timeout)
+            timeout = setTimeout(() => {
+                populateDiv()
+            }, 100)
+        }
+
+        const populateDiv = async () => {
+            const a = parseInt(document.getElementById("a").value)
+            const b = parseInt(document.getElementById("b").value)
+            const response = await fetch(`http://localhost:3000/sum?a=${a}&b=${b}`)
+            const data = await response.json()
+            document.getElementById("calculatedSum").innerHTML = `Sum is: ${data}`
+        }
+
+        const calculateInterest = async () => {
+            const principle = parseInt(document.getElementById("principle").value)
+            const roi = parseInt(document.getElementById("roi").value)
+            const time = parseInt(document.getElementById("time").value)
+
+            const response = await fetch(`http://localhost:3000/interest?principle=${principle}&roi=${roi}&time=${time}`)
+            const data = await response.json()
+            document.getElementById("simpleInterest").innerHTML = `Simple Interest is: ${data.interest}`
+            document.getElementById("total").innerHTML = `Simple Interest is: ${data.total}`
+
+        }
+    </script>
+    <body>
+        <h3>Calculate sum of 2 numbers</h3>
+        <label>Enter a: </label> <input type="text" id="a" oninput="populateDiv()"></input> <br> <br>
+        <label>Enter b: </label> <input type="text" id="b" oninput="populateDiv()"></input> <br> <br>
+        <!-- <button onclick="populateDiv()">Calculate Sum</button> <br> <br> -->
+        <div id="calculatedSum" ></div>
+        <br><br><br>
+        <h3>Calculate simple interest</h3>
+        <label>Enter principle: </label> <input type="text" id="principle"></input> <br> <br>
+        <label>Enter rate of interest: </label> <input type="text" id="roi"></input> <br> <br>
+        <label>Enter duration: </label> <input type="text" id="time"></input> <br> <br>
+        <button onclick="calculateInterest()">Calculate Simple interest</button> <br> <br>
+        <div id="simpleInterest" ></div>
+        <div id="total" ></div>
+
+    </body>
+</html>
