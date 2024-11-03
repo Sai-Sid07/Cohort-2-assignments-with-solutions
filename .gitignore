@@ -11,3 +11,6 @@
 
 ### Node_Modules ###
 node_modules/
+
+### Dot env
+.env

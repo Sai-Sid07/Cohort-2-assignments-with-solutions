@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script>
+    let globalId = 1;
+    let todoState = [];
+    let oldTodoState = [];
+
+    function addTodoToDom(todo) {
+      const todos = document.getElementById("todos")
+      todos.appendChild(createTodoDiv(todo.title, todo.description, todo.id))
+    }
+
+    function removeTodoFromDom(todo) {
+      const element = document.getElementById(todo.id)
+      if (element) {
+        element.parentElement.removeChild(element);
+      }
+    }
+
+    function updateTodoInDom(oldTodo, newTodo) {
+      const parent = document.getElementById(oldTodo.id)
+      parent.children[0].innerHTML = newTodo.title
+      parent.children[1].innerHTML = newTodo.description
+      parent.children[2].innerHTML = newTodo.completed ? "Mark as done" : "Done"
+    }
+
+    function updateState(newTodos) {
+      // calculate the diff b/w newTodos and oldTodos.
+      // More specifically, find out what todos are - 
+      // 1. added
+      // 2. deleted
+      // 3. updated
+      const added = [];
+      const deleted = [];
+      const updated = [];
+      // calculate these 3 arrays
+      // call addTodo, removeTodo, updateTodo functions on each of the elements
+      const newTodoIds = new Set(newTodos.map(element => element.id))
+
+      oldTodoState.forEach(oldTodo => {
+        if (!newTodoIds.has(oldTodo.id)) {
+          deleted.push(oldTodo);
+        }
+      });
+
+      newTodos.forEach(newTodo => {
+        const oldTodo = oldTodoState.find(old => old.id === newTodo.id);
+        if (!oldTodo) {
+          added.push(newTodo);
+        } else if (
+          oldTodo.title !== newTodo.title ||
+          oldTodo.description !== newTodo.description ||
+          oldTodo.completed !== newTodo.completed
+        ) {
+          updated.push({
+            old: oldTodo,
+            new: newTodo
+          });
+        }
+      });
+      deleted.forEach(deletedTodo => removeTodoFromDom(deletedTodo))
+      added.forEach(addedTodo => addTodoToDom(addedTodo))
+      updated.forEach(updatedTodo => updateTodoInDom(updatedTodo.old, updatedTodo.new))
+
+      oldTodoState = JSON.parse(JSON.stringify(newTodos));;
+    }
+
+    function addTodo() {
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+      todoState.push({
+        title: title,
+        description: description,
+        completed: false,
+        id: globalId++,
+      })
+      updateState(todoState);
+      document.getElementById("title").value = "";
+      document.getElementById("description").value = "";
+    }
+
+    function markAsDone(id){
+      const button = document.getElementById(id)
+      button.children[2].innerHTML = "Done"
+    }
+
+    function createTodoDiv(title, description, id){
+      const parentEnclosure = document.createElement("div")
+      const titleChild = document.createElement("div")
+      const descriptionChild = document.createElement("div")    
+      const buttonChild = document.createElement("button")
+      titleChild.innerHTML = title
+      descriptionChild.innerHTML = description
+      buttonChild.innerHTML = "Mark As Done"
+      buttonChild.setAttribute("onclick", `markAsDone(${id})`)
+      parentEnclosure.appendChild(titleChild)
+      parentEnclosure.appendChild(descriptionChild)
+      parentEnclosure.appendChild(buttonChild)
+      parentEnclosure.setAttribute("id", id)
+      return parentEnclosure;
+    }
+
+    function addTodoPrimitive() {
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+      const todoDiv = document.getElementById("todos")
+      todoDiv.appendChild(createTodoDiv(title, description, globalId++))
+    }
+
+    function updateStateTodos(todosFromServer) {
+      const todos = document.getElementById("todos")
+      todos.innerHTML = ""
+      todosFromServer.forEach(element => {
+        todos.appendChild(createTodoDiv(element.title, element.description, element.id))
+      });
+    }
+
+    function getRandomInt(max) {
+      return Math.floor(Math.random() * max) + 2;
+    }
+
+    function generateRandomTodos() {
+      const todosSize = getRandomInt(10)
+      const todos = []
+      for (let index = 0; index < todosSize; index++) {
+        const todo = {
+          title: (Math.random() + 1).toString(36).substring(7),
+          description: (Math.random() + 1).toString(36).substring(7),
+          id: index
+        }
+        todos.push(todo)
+      }
+      return todos
+    }
+
+
+    // setInterval(() => {
+    //   const todosFromServer = generateRandomTodos()
+    //   updateStateTodos(todosFromServer)
+    // }, 2000)
+  </script>
+</head>
+
+<body>
+  <input type="text" id="title" placeholder="Todo title"></input> <br /><br />
+  <input type="text" id="description" placeholder="Todo description"></input> <br /><br />
+  <button onclick="addTodo()">Add todo</button>
+  <br /> <br />
+
+  <div id="todos">
+
+  </div>
+</body>
+
+</html>
